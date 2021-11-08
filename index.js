@@ -11,6 +11,9 @@ const app = express();
 // use() is a middleware*
 app.use(express.static('public'));
 
+// lectura y parseo del body
+app.use(express.json());
+
 /**
  * =>RUTAS<=
  * todo lo que require(...) vaya a exportar lo va
