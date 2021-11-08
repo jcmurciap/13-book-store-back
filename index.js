@@ -11,12 +11,12 @@ const app = express();
 // use() is a middleware*
 app.use(express.static('public'));
 
-// rutas
-// app.get("/", (req, res) => {
-//     res.json({
-//         ok: true,
-//     });
-// });
+/**
+ * =>RUTAS<=
+ * todo lo que require(...) vaya a exportar lo va
+ * a habilitar en '/api/auth'
+*/
+app.use('/api/auth', require('./routes/auth'));
 
 // escucha peticiones
 app.listen(process.env.PORT, () => {
