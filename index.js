@@ -2,10 +2,15 @@
 
 // importing
 const express = require('express');
+const { dbConnection } = require('./database/config');
 require('dotenv').config();
 
 // crea el servidor de express
 const app = express();
+
+// base de datos
+dbConnection();
+
 
 // Directorio publico
 // use() is a middleware*
