@@ -1,23 +1,28 @@
 const express = require('express');
+const { validationResult } = require('express-validator');
 
 const createUser = (req, res=express.response) => {
     
     const {name, email, password} = req.body;
     
-    if(name.length < 2) {
+    // manejo de errores(el validador puede encontrar n errores al instante) 
+    // mientras que si se hacen manualmente tendría que hacer muchos validadores.
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
         return res.status(400).json({
             ok: false,
-            msg: 'name should contain at least two words',
-        });
-    };
-    if(password.length < 5) {
-        return res.status(400).json({
-            ok: false,
-            msg: "Password must be at least 5 characters",
+            
+            /**
+             * 'mapped' retorna un objeto
+             * clave:nombre del campo
+             * valor: error de validacion
+            */
+            errors: errors.mapped(),
         });
     };
 
-    return res.json({
+    return res.status(201).json({
         ok: true,
         msg: "registered",
         name,
@@ -29,7 +34,15 @@ const createUser = (req, res=express.response) => {
 const loginUser = (req, res=express.response) => {
     
     const {email, password} = req.body;
-    res.json({
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({
+            ok: false,
+            errors: errors.mapped(),
+        });
+    };
+    return res.status(202).json({
         ok: true,
         msg: 'login',
         email,
@@ -38,7 +51,7 @@ const loginUser = (req, res=express.response) => {
 };
 
 const renewToken = (req, res=express.response) => {
-    res.json({
+    json({
         ok: true,
         msg: 'renew'
     });
