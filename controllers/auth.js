@@ -1,9 +1,10 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const { Model } = require('../models/users');
 
 const createUser = async(req, res=express.response) => {
 
-    const { email } = req.body;
+    const { email, password } = req.body;
     
     try {
         
@@ -17,6 +18,11 @@ const createUser = async(req, res=express.response) => {
         };
         
         user = new Model(req.body);
+        
+        // encriptar contraseña
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(password, salt);
+        
         await user.save();
         return res.status(201).json({
             ok: true,
