@@ -11,17 +11,3 @@ router.put('/:d', updateEvent);
 router.delete('/:d', deleteEvent);
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
