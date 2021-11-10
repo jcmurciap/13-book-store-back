@@ -20,7 +20,18 @@ router.post(
     createEvent);
 
 router.get('/', getEvent);
-router.put('/:d', updateEvent);
-router.delete('/:d', deleteEvent);
+
+router.put(
+    '/:id',
+    [
+        check('name','Book name must be included').not().isEmpty(),
+        check('author','Price name must be included').not().isEmpty(),
+        check('price','Price name must be quantity').isNumeric(),
+        validateFields,
+    ], 
+    updateEvent
+);
+
+router.delete('/:id', deleteEvent);
 
 module.exports = router;

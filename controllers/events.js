@@ -31,11 +31,48 @@ const getEvent = async(req, res=response) => {
     });
 };
 
-const updateEvent = (req, res=response) => {
-    res.json({
-        ok: true,
-        msg: "updateEvent"
-    });
+const updateEvent = async(req, res=response) => {
+    
+    const eventId = req.params.id;
+
+    try {
+        // verificar si eventId esta en la BBDD
+        const event =  await Event.findById(eventId);
+        const uid = req.uid;
+
+        if(!event) {
+            res.status(404).json({
+                ok: false,
+                msg: "Event was not found",
+            });
+        };
+
+         // El evento solo lo puede modificar la persona que lo crea
+        if(event.user.toString() !== uid) {
+            return res.status(401).json({
+                ok: false,
+                msg: "You are not allowed to edit this event"
+            });
+        };
+
+        const newEvent = {
+            ...req.body,
+            user: uid
+        };
+
+        const updatedEvent = await Event.findByIdAndUpdate(eventId, newEvent, {new: true});
+        res.json({
+            ok: true,
+            msg: "Event updated",
+            event: updatedEvent, 
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "An error has ocurred"
+        });
+    };
 };
 
 const deleteEvent = (req, res=response) => {
