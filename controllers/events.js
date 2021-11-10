@@ -41,7 +41,7 @@ const updateEvent = async(req, res=response) => {
         const uid = req.uid;
 
         if(!event) {
-            res.status(404).json({
+            return res.status(404).json({
                 ok: false,
                 msg: "Event was not found",
             });
@@ -75,11 +75,39 @@ const updateEvent = async(req, res=response) => {
     };
 };
 
-const deleteEvent = (req, res=response) => {
-    res.json({
-        ok: true,
-        msg: "deleteEvent"
-    });
+const deleteEvent = async(req, res=response) => {
+    
+    const eventId = req.params.id
+    try {
+        const event = await Event.findById(eventId);
+        const uid = req.uid;
+        if(!event) {
+            return res.status(404).json({
+                ok: false,
+                msg: "Event does not exist",
+            });
+        };
+
+        // solo puede borrar el que crea el evento
+        if(event.user.toString() !== uid) {
+            return res.status(401).json({
+                ok: false,
+                msg: "You are not allowed to delete this event",
+            });
+        };
+
+        const deleteEvent = await Event.findByIdAndDelete(eventId);
+        res.json({
+            ok: true,
+            event: (`${deleteEvent.name} event was deleted`),
+        });
+    
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "An error has ocurred",
+        });
+    };
 };
 
 module.exports = {
