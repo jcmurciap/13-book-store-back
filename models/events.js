@@ -17,7 +17,7 @@ const EventSchema = Schema({
     user: {
         // es una referencia a user
         type: Schema.Types.ObjectId,
-        ref: 'Model',
+        ref: 'Event',
     },
 }); 
 
@@ -28,7 +28,5 @@ EventSchema.method('toJSON', function() {
     return object;
 });
 
-
-
-const Model = model('Event', EventSchema);
-module.exports = { Model };
+const Event = model('Event', EventSchema);
+module.exports = { Event }; 
