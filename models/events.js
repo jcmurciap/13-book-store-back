@@ -4,15 +4,15 @@ const { Schema, model } = require('mongoose');
 const EventSchema = Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
     },
     author: {
         type: String,
-        require: true,
+        required: true,
     },
     price: {
         type: Number,
-        require: true,
+        required: true,
     },
     user: {
         // es una referencia a user
@@ -20,6 +20,15 @@ const EventSchema = Schema({
         ref: 'Model',
     },
 }); 
+
+// quitar el '__v' y cambia '_id' a 'id' en la respuesta de postman.
+EventSchema.method('toJSON', function() {
+    const {__v, _id, ...object} = this.toObject();
+    object.id = _id;
+    return object;
+});
+
+
 
 const Model = model('Event', EventSchema);
 module.exports = { Model };
