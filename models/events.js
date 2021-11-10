@@ -20,3 +20,6 @@ const EventSchema = Schema({
         ref: 'Model',
     },
 }); 
+
+const Model = model('Event', EventSchema);
+module.exports = { Model };
